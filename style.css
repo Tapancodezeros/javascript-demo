@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: rgba(63, 24, 114, 0.123); 
+}
+Th
+
+h1 {
+  color: #7a7676;
+}
+
+input, select {
+  margin: 10px 5px;
+  padding: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #383636;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: rgb(158, 166, 226);
+}
+
+button.delete-btn {
+  background-color: #8f2e23;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button.delete-btn:hover {
+  background-color: #5e1d16;
+}

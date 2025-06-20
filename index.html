@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee details</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Employee List</h1>
+
+  <label for="searchInput">Search by EmployeeName:</label>
+  <input type="text" id="searchInput" placeholder="Enter name...">
+
+  <label for="sortSelect">Sort by Salary of employee:</label>
+  <select id="sortSelect">
+    <option value="">-- Select --</option>
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Emp ID</th>
+        <th>Name</th>
+        <th>Salary</th>
+        <th>Department</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTableBody">
+    </tbody>
+  </table>
+
+  <script src="main.js"></script>
+</body>
+</html>
