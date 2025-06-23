@@ -36,16 +36,16 @@ function deleteEmployee(empId) {
 
 function applyFilters() {
   const searchValue = document.getElementById("searchInput").value.toLowerCase();
-  const sortValue = document.getElementById("sortSelect").value;    //sort the value asc/dsc
+  const sortValue = document.getElementById("sortSelect").value;    
 
   let filtered = currentEmployees.filter(emp =>
     emp.name.toLowerCase().includes(searchValue)
   );
 
   if (sortValue === "asc") {
-    filtered.sort((a, b) => a.salary - b.salary);
+    filtered.sort((a, b) => a.salary - b.salary);//sort the value asc
   } else if (sortValue === "desc") {
-    filtered.sort((a, b) => b.salary - a.salary);
+    filtered.sort((a, b) => b.salary - a.salary);//sort the value dsc
   }
 
   renderTable(filtered);  //when data change also re-apply filter
