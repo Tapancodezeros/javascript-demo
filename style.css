@@ -1,101 +1,154 @@
+/* Base Styles */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 30px;
+  padding: 40px 20px;
   margin: 0;
-  background: linear-gradient(135deg, #5bb67686, #acbbf8);
-  color: #333;
+  background: linear-gradient(135deg, #5654c2, #8fd3f4);
+  color: #2c2c2c;
   min-height: 100vh;
   box-sizing: border-box;
+  line-height: 1.6;
 }
 
 h1 {
-  color: #333;
+  color: #222;
   text-align: center;
-  font-size: 2.2em;
-  margin-bottom: 30px;
-  font-weight: 600;
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
 }
 
 /* Form Controls */
 input, select, button {
   margin: 8px 6px;
-  padding: 10px 14px;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 1rem;
+  min-width: 200px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 input:focus, select:focus {
-  border-color: #6a5acd;
-  box-shadow: 0 0 6px rgba(105, 86, 230, 0.4);
+  border-color: #5e60ce;
+  box-shadow: 0 0 8px rgba(94, 96, 206, 0.3);
   outline: none;
 }
 
 button {
+  background-color: #5e60ce;
+  color: white;
+  border: none;
+  font-weight: 600;
   cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Filter + Count Display */
+button:hover {
+  background-color: #4e51ba;
+  transform: translateY(-2px);
+}
+
+/* Label Styling */
+label[for="yearFilter"],
+label[for="fromDate"],
+label[for="toDate"] {
+  font-weight: 600;
+  margin-left: 5px;
+  color: #3d3d3d;
+}
+
+/* Filter Controls Container */
+div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+#yearFilter,
+#fromDate,
+#toDate {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* Count Display */
 #countDisplay {
-  margin-top: 10px;
+  margin-top: 12px;
   font-weight: 500;
-  font-size: 1.05rem;
-  color: #2f2f2f;
+  font-size: 1.1rem;
+  color: #444;
 }
 
 /* Table Styling */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
+  margin-top: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 }
 
 th, td {
-  padding: 14px 18px;
+  padding: 16px 20px;
   text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eaeaea;
 }
 
 th {
-  background-color: #6a5acd;
+  background-color: #5e60ce;
   color: white;
-  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  letter-spacing: 0.6px;
 }
 
 td {
-  background-color: #fcfcfc;
-  font-size: 0.95rem;
+  background-color: #fdfdfd;
+  font-size: 0.96rem;
+  color: #333;
 }
 
 tr:nth-child(even) td {
-  background-color: #f6f7fb;
+  background-color: #f4f6fa;
 }
 
 /* Delete Button */
 button.delete-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 4px;
+  background-color: #f44336;
+  padding: 10px 16px;
+  font-size: 0.92rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button.delete-btn:hover {
-  background-color: #0c0b0b;
+  background-color: #c62828;
+  transform: scale(1.05);
 }
 
-/* Responsive Enhancements */
+/* Responsive Styles */
 @media screen and (max-width: 768px) {
+  div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  input, select, button {
+    width: 100%;
+    margin: 6px 0;
+  }
+
   table, thead, tbody, th, td, tr {
     display: block;
   }
@@ -105,15 +158,15 @@ button.delete-btn:hover {
   }
 
   tr {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-radius: 6px;
-    padding: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    padding: 12px;
   }
 
   td {
-    padding: 10px 14px;
+    padding: 12px 16px;
     text-align: right;
     position: relative;
     border: none;
@@ -122,11 +175,11 @@ button.delete-btn:hover {
   td::before {
     content: attr(data-label);
     position: absolute;
-    left: 14px;
-    top: 10px;
+    left: 16px;
+    top: 12px;
     font-weight: bold;
+    font-size: 0.85rem;
+    color: #5e60ce;
     text-transform: uppercase;
-    font-size: 0.8rem;
-    color: #8a7af5;
   }
 }
