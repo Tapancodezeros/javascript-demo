@@ -11,13 +11,12 @@ const employees = [
   { empId: 110, name: "chintan patel", salary: 35000, department: "delevery manager", joiningDate: "2019-11-30" },
 ];
 
-let currentEmployees = [...employees];   //copy of employee list.
+let currentEmployees = [...employees];
 
-// Calculate the experience from joining date till now
+// Calculate experience string from joining date to today
 function calculateExperience(joiningDate) {
   const join = new Date(joiningDate);
   const now = new Date();
-
   let years = now.getFullYear() - join.getFullYear();
   let months = now.getMonth() - join.getMonth();
 
@@ -29,7 +28,7 @@ function calculateExperience(joiningDate) {
   return `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
 }
 
-// Render the employee data table
+// Render the employee table rows
 function renderTable(data) {
   const tbody = document.getElementById("employeeTableBody");
   tbody.innerHTML = "";
@@ -45,19 +44,23 @@ function renderTable(data) {
       <td>${emp.department}</td>
       <td>${emp.joiningDate}</td>
       <td>${experience}</td>
-      <td><button class="delete-btn" onclick="deleteEmployee(${emp.empId})">Delete</button></td>
+      <td>
+        <button class="delete-btn" onclick="deleteEmployee(${emp.empId})">Delete</button>
+        <button class="edit-btn" onclick="editEmployee(${emp.empId})">Edit</button>
+      </td>
     `;
     tbody.appendChild(row);
   });
 }
 
-// Delete an employee by empId
+// Delete employee by empId
 function deleteEmployee(empId) {
   currentEmployees = currentEmployees.filter(emp => emp.empId !== empId);
   applyFilters();
+  hideEditForm(); // If editing deleted employee, close form
 }
 
-// Apply filters for search, sort, year, and date range
+// Filter employees based on search, year, dates, sort
 function applyFilters() {
   const searchValue = document.getElementById("searchInput").value.toLowerCase();
   const sortValue = document.getElementById("sortSelect").value;
@@ -69,13 +72,11 @@ function applyFilters() {
     emp.name.toLowerCase().includes(searchValue)
   );
 
-  // Filter by year if selected
   if (yearValue) {
     filtered = filtered.filter(emp =>
       new Date(emp.joiningDate).getFullYear() == yearValue
     );
 
-    // Filter further by date range within year if both dates provided
     if (fromDate && toDate) {
       const from = new Date(fromDate);
       const to = new Date(toDate);
@@ -89,9 +90,7 @@ function applyFilters() {
       document.getElementById("countDisplay").innerText =
         `Employees joined in ${yearValue}: ${filtered.length}`;
     }
-  }
-  // Filter by custom date range only
-  else if (fromDate && toDate) {
+  } else if (fromDate && toDate) {
     const from = new Date(fromDate);
     const to = new Date(toDate);
     filtered = filtered.filter(emp => {
@@ -104,7 +103,6 @@ function applyFilters() {
     document.getElementById("countDisplay").innerText = "";
   }
 
-  // Sort the results by salary
   if (sortValue === "asc") {
     filtered.sort((a, b) => a.salary - b.salary);
   } else if (sortValue === "desc") {
@@ -112,24 +110,87 @@ function applyFilters() {
   }
 
   renderTable(filtered);
+  hideEditForm();
 }
 
-// Add event listener for search input & sort dropdown
-document.getElementById("searchInput").addEventListener("input", applyFilters);
+// --- EDIT EMPLOYEE FUNCTIONALITY ---
 
-document.getElementById("sortSelect").addEventListener("change", applyFilters);
+// Show edit form with employee data filled in
+function editEmployee(empId) {
+  const emp = currentEmployees.find(e => e.empId === empId);
+  if (!emp) return alert("Employee not found");
 
-// Auto-fill date range fields when a year is selected
+  document.getElementById("editEmpId").value = emp.empId;
+  document.getElementById("editName").value = emp.name;
+  document.getElementById("editSalary").value = emp.salary;
+  document.getElementById("editDepartment").value = emp.department;
+  document.getElementById("editJoiningDate").value = emp.joiningDate;
+
+  document.getElementById("editFormContainer").style.display = "block";
+  // Scroll to edit form smoothly
+  document.getElementById("editFormContainer").scrollIntoView({ behavior: 'smooth' });
+}
+
+// Save edited employee data
+function saveEmployee(event) {
+  event.preventDefault();
+
+  const empId = parseInt(document.getElementById("editEmpId").value, 10);
+  const name = document.getElementById("editName").value.trim();
+  const salary = parseFloat(document.getElementById("editSalary").value);
+  const department = document.getElementById("editDepartment").value.trim();
+  const joiningDate = document.getElementById("editJoiningDate").value;
+
+  if (!name || isNaN(salary) || !department || !joiningDate) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const index = currentEmployees.findIndex(emp => emp.empId === empId);
+  if (index === -1) {
+    alert("Employee not found");
+    return;
+  }
+
+  // Update employee
+  currentEmployees[index] = {
+    empId,
+    name,
+    salary,
+    department,
+    joiningDate,
+  };
+
+  applyFilters();
+  hideEditForm();
+}
+
+// Hide the edit form and clear inputs
+function hideEditForm() {
+  document.getElementById("editFormContainer").style.display = "none";
+  document.getElementById("editForm").reset();
+}
+
+// Cancel editing
+function cancelEdit() {
+  hideEditForm();
+}
+
+// Auto-fill date range when year is selected
 document.getElementById("yearFilter").addEventListener("input", function () {
   const year = this.value;
-
   if (year && year >= 2010 && year <= 2100) {
     document.getElementById("fromDate").value = `${year}-01-01`;
     document.getElementById("toDate").value = `${year}-12-31`;
   }
-
   applyFilters();
 });
 
-// Initial render of all employees
+// Add event listeners
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+document.getElementById("sortSelect").addEventListener("change", applyFilters);
+document.getElementById("fromDate").addEventListener("change", applyFilters);
+document.getElementById("toDate").addEventListener("change", applyFilters);
+
+// Initial render of table
 renderTable(currentEmployees);
