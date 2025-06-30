@@ -10,13 +10,13 @@ const employees = [
   { empId: 109, name: "vidhi patel", salary: 40000, department: "sr.Computer Engineer", joiningDate: "2019-06-13" },
   { empId: 110, name: "chintan patel", salary: 35000, department: "delevery manager", joiningDate: "2019-11-30" },
   { empId: 111, name: "navin prajapati", salary: 55000, department: "delevery manager", joiningDate: "2019-01-22" },
-  { empId: 112, name: "git jadeja", salary: 130000, department: "delevery manager", joiningDate: "2011-11-11" },
-  { empId: 113, name: "aagam shah", salary: 125000, department: "delevery manager", joiningDate: "2012-02-01" },
-  { empId: 114, name: "rutvi shah", salary: 115000, department: "delevery manager", joiningDate: "2013-01-01" },
-  { empId: 115, name: "rajvi singh", salary: 100000, department: "delevery manager", joiningDate: "2014-12-01" },
+  { empId: 112, name: "git jadeja", salary: 130000, department: "Computer Engineer", joiningDate: "2011-11-11" },
+  { empId: 113, name: "aagam shah", salary: 125000, department: "Sales manager", joiningDate: "2012-02-01" },
+  { empId: 114, name: "rutvi shah", salary: 115000, department: "Computer Engineer", joiningDate: "2013-01-01" },
+  { empId: 115, name: "rajvi singh", salary: 100000, department: "HR", joiningDate: "2014-12-01" },
   { empId: 116, name: "keyur bhuvaji", salary: 85000, department: "delevery manager", joiningDate: "2015-07-01" },
-  { empId: 117, name: "kaushik patel", salary: 44000, department: "delevery manager", joiningDate: "2016-08-01" },
-  { empId: 118, name: "raj patel", salary: 66000, department: "delevery manager", joiningDate: "2017-09-01" }
+  { empId: 117, name: "kaushik patel", salary: 44000, department: "Sales", joiningDate: "2016-08-01" },
+  { empId: 118, name: "raj patel", salary: 66000, department: "Sales", joiningDate: "2017-09-01" }
 
 ];
 
