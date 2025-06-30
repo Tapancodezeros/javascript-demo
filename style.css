@@ -198,3 +198,9 @@ button.edit-btn:hover {
   background-color: #cc8400;
   transform: scale(1.05);
 }
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
