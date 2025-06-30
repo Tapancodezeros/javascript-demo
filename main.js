@@ -64,7 +64,7 @@ function renderTable(data) {
   });
 }
 
-//__ Deletes an employee by ID
+// Deletes an employee by ID
 function deleteEmployee(empId) {
   currentEmployees = currentEmployees.filter(emp => emp.empId !== empId);
   applyFilters();
@@ -139,7 +139,7 @@ function applyFilters() {
     filtered.sort((a, b) => b.salary - a.salary);
   }
 
-  // Count Display (optional)
+  //  Count Display (optional)
   let countMessage = '';
   if (yearValue && fromDate && toDate) {
     countMessage = `Employees joined in ${yearValue} from ${fromDate} to ${toDate}: ${filtered.length}`;
