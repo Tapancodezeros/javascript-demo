@@ -8,172 +8,151 @@ const employees = [
   { empId: 107, name: "tapan adesara", salary: 52000, department: "Computer Engineer", joiningDate: "2023-06-27" },
   { empId: 108, name: "sandip chadotara", salary: 30000, department: "Computer Engineer", joiningDate: "2024-08-22" },
   { empId: 109, name: "vidhi patel", salary: 40000, department: "sr.Computer Engineer", joiningDate: "2019-06-13" },
-  { empId: 110, name: "chintan patel", salary: 35000, department: "delevery manager", joiningDate: "2019-11-30" },
+  { empId: 110, name: "chintan patel", salary: 35000, department: "delevery manager", joiningDate: "2019-11-30" }
 ];
 
 let currentEmployees = [...employees];
+let editingEmpId = null;
 
-// Calculate experience string from joining date to today
+// Calculates the experience in years and months from the joining date.
 function calculateExperience(joiningDate) {
   const join = new Date(joiningDate);
   const now = new Date();
   let years = now.getFullYear() - join.getFullYear();
   let months = now.getMonth() - join.getMonth();
-
   if (months < 0) {
     years -= 1;
     months += 12;
   }
-
   return `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
 }
 
-// Render the employee table rows
+// Renders the employee table with given data
 function renderTable(data) {
   const tbody = document.getElementById("employeeTableBody");
   tbody.innerHTML = "";
-
   data.forEach(emp => {
     const row = document.createElement("tr");
-    const experience = calculateExperience(emp.joiningDate);
-
-    row.innerHTML = `
-      <td>${emp.empId}</td>
-      <td>${emp.name}</td>
-      <td>${emp.salary}</td>
-      <td>${emp.department}</td>
-      <td>${emp.joiningDate}</td>
-      <td>${experience}</td>
-      <td>
-        <button class="delete-btn" onclick="deleteEmployee(${emp.empId})">Delete</button>
-        <button class="edit-btn" onclick="editEmployee(${emp.empId})">Edit</button>
-      </td>
-    `;
+    if (emp.empId === editingEmpId) {
+      row.innerHTML = `
+        <td>${emp.empId}</td>
+        <td><input type="text" id="editName" value="${emp.name}"></td>
+        <td><input type="number" id="editSalary" value="${emp.salary}"></td>
+        <td>${emp.department}</td>
+        <td>${emp.joiningDate}</td>
+        <td>${calculateExperience(emp.joiningDate)}</td>
+        <td>
+          <button onclick="saveInlineEdit(${emp.empId})">Save</button>
+          <button onclick="cancelInlineEdit()">Cancel</button>
+        </td>
+      `;
+    } else {
+      row.innerHTML = `
+        <td>${emp.empId}</td>
+        <td>${emp.name}</td>
+        <td>${emp.salary}</td>
+        <td>${emp.department}</td>
+        <td>${emp.joiningDate}</td>
+        <td>${calculateExperience(emp.joiningDate)}</td>
+        <td>
+          <button onclick="deleteEmployee(${emp.empId})" ${editingEmpId !== null ? "disabled" : ""}>Delete</button>
+          <button onclick="editEmployee(${emp.empId})" ${editingEmpId !== null ? "disabled" : ""}>Edit</button>
+        </td>
+      `;
+    }
     tbody.appendChild(row);
   });
 }
 
-// Delete employee by empId
+//__ Deletes an employee by ID
 function deleteEmployee(empId) {
   currentEmployees = currentEmployees.filter(emp => emp.empId !== empId);
   applyFilters();
-  hideEditForm(); // If editing deleted employee, close form
 }
 
-// Filter employees based on search, year, dates, sort
+// Starts editing mode for selected employee
+function editEmployee(empId) {
+  editingEmpId = empId;
+  renderTable(currentEmployees);
+}
+
+// Saves the edited data
+function saveInlineEdit(empId) {
+  const name = document.getElementById("editName").value.trim();
+  const salary = parseFloat(document.getElementById("editSalary").value);
+  if (!name || isNaN(salary)) {
+    alert("Please enter valid name and salary.");
+    return;
+  }
+  const index = currentEmployees.findIndex(emp => emp.empId === empId);
+  if (index !== -1) {
+    currentEmployees[index].name = name;
+    currentEmployees[index].salary = salary;
+  }
+  editingEmpId = null;
+  applyFilters();
+}
+
+// Cancels editing
+function cancelInlineEdit() {
+  editingEmpId = null;
+  renderTable(currentEmployees);
+}
+
+// Applies search, sort, year and date range filters independently
 function applyFilters() {
+  let filtered = [...currentEmployees];
+
+  // Search Filter
   const searchValue = document.getElementById("searchInput").value.toLowerCase();
-  const sortValue = document.getElementById("sortSelect").value;
+  if (searchValue) {
+    filtered = filtered.filter(emp =>
+      emp.name.toLowerCase().includes(searchValue)
+    );
+  }
+
+  // Year Filter
   const yearValue = document.getElementById("yearFilter").value;
-  const fromDate = document.getElementById("fromDate").value;
-  const toDate = document.getElementById("toDate").value;
-
-  let filtered = currentEmployees.filter(emp =>
-    emp.name.toLowerCase().includes(searchValue)
-  );
-
   if (yearValue) {
     filtered = filtered.filter(emp =>
       new Date(emp.joiningDate).getFullYear() == yearValue
     );
+  }
 
-    if (fromDate && toDate) {
-      const from = new Date(fromDate);
-      const to = new Date(toDate);
-      filtered = filtered.filter(emp => {
-        const join = new Date(emp.joiningDate);
-        return join >= from && join <= to;
-      });
-      document.getElementById("countDisplay").innerText =
-        `Employees joined in ${yearValue} from ${fromDate} to ${toDate}: ${filtered.length}`;
-    } else {
-      document.getElementById("countDisplay").innerText =
-        `Employees joined in ${yearValue}: ${filtered.length}`;
-    }
-  } else if (fromDate && toDate) {
+  // Date Range Filter
+  const fromDate = document.getElementById("fromDate").value;
+  const toDate = document.getElementById("toDate").value;
+  if (fromDate && toDate) {
     const from = new Date(fromDate);
     const to = new Date(toDate);
     filtered = filtered.filter(emp => {
       const join = new Date(emp.joiningDate);
       return join >= from && join <= to;
     });
-    document.getElementById("countDisplay").innerText =
-      `Employees joined from ${fromDate} to ${toDate}: ${filtered.length}`;
-  } else {
-    document.getElementById("countDisplay").innerText = "";
   }
 
+  // Sorting
+  const sortValue = document.getElementById("sortSelect").value;
   if (sortValue === "asc") {
     filtered.sort((a, b) => a.salary - b.salary);
   } else if (sortValue === "desc") {
     filtered.sort((a, b) => b.salary - a.salary);
   }
 
+  // Count Display (optional)
+  let countMessage = '';
+  if (yearValue && fromDate && toDate) {
+    countMessage = `Employees joined in ${yearValue} from ${fromDate} to ${toDate}: ${filtered.length}`;
+  } else if (yearValue) {
+    countMessage = `Employees joined in ${yearValue}: ${filtered.length}`;
+  } else if (fromDate && toDate) {
+    countMessage = `Employees joined from ${fromDate} to ${toDate}: ${filtered.length}`;
+  } else {
+    countMessage = '';
+  }
+  document.getElementById("countDisplay").innerText = countMessage;
+
   renderTable(filtered);
-  hideEditForm();
-}
-
-// --- EDIT EMPLOYEE FUNCTIONALITY ---
-
-// Show edit form with employee data filled in
-function editEmployee(empId) {
-  const emp = currentEmployees.find(e => e.empId === empId);
-  if (!emp) return alert("Employee not found");
-
-  document.getElementById("editEmpId").value = emp.empId;
-  document.getElementById("editName").value = emp.name;
-  document.getElementById("editSalary").value = emp.salary;
-  document.getElementById("editDepartment").value = emp.department;
-  document.getElementById("editJoiningDate").value = emp.joiningDate;
-
-  document.getElementById("editFormContainer").style.display = "block";
-  // Scroll to edit form smoothly
-  document.getElementById("editFormContainer").scrollIntoView({ behavior: 'smooth' });
-}
-
-// Save edited employee data
-function saveEmployee(event) {
-  event.preventDefault();
-
-  const empId = parseInt(document.getElementById("editEmpId").value, 10);
-  const name = document.getElementById("editName").value.trim();
-  const salary = parseFloat(document.getElementById("editSalary").value);
-  const department = document.getElementById("editDepartment").value.trim();
-  const joiningDate = document.getElementById("editJoiningDate").value;
-
-  if (!name || isNaN(salary) || !department || !joiningDate) {
-    alert("Please fill all fields correctly.");
-    return;
-  }
-
-  const index = currentEmployees.findIndex(emp => emp.empId === empId);
-  if (index === -1) {
-    alert("Employee not found");
-    return;
-  }
-
-  // Update employee
-  currentEmployees[index] = {
-    empId,
-    name,
-    salary,
-    department,
-    joiningDate,
-  };
-
-  applyFilters();
-  hideEditForm();
-}
-
-// Hide the edit form and clear inputs
-function hideEditForm() {
-  document.getElementById("editFormContainer").style.display = "none";
-  document.getElementById("editForm").reset();
-}
-
-// Cancel editing
-function cancelEdit() {
-  hideEditForm();
 }
 
 // Auto-fill date range when year is selected
@@ -186,11 +165,11 @@ document.getElementById("yearFilter").addEventListener("input", function () {
   applyFilters();
 });
 
-// Add event listeners
+//  Event listeners for real-time filtering/sorting
 document.getElementById("searchInput").addEventListener("input", applyFilters);
 document.getElementById("sortSelect").addEventListener("change", applyFilters);
 document.getElementById("fromDate").addEventListener("change", applyFilters);
 document.getElementById("toDate").addEventListener("change", applyFilters);
 
-// Initial render of table
+// Initial render
 renderTable(currentEmployees);
