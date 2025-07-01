@@ -61,7 +61,7 @@ label[for="fromDate"],
 label[for="toDate"] {
   font-weight: 600;
   margin-left: 5px;
-  color: #ebe3e3;
+  color: #f5e0e0;
 }
 
 /* Filter Controls Container */
@@ -123,20 +123,7 @@ tr:nth-child(even) td {
   background-color: #f4f6fa;
 }
 
-/* Delete Button */
-button.delete-btn {
-  background-color: #f44336;
-  padding: 10px 16px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-button.delete-btn:hover {
-  background-color: #c62828;
-  transform: scale(1.05);
-}
 
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
