@@ -16,7 +16,7 @@ const employees = [
   { empId: 115, name: "rajvi singh", salary: 100000, department: "HR", joiningDate: "2014-12-01" },
   { empId: 116, name: "keyur bhuvaji", salary: 85000, department: "delevery manager", joiningDate: "2015-07-01" },
   { empId: 117, name: "kaushik patel", salary: 44000, department: "Sales", joiningDate: "2016-08-01" },
-  { empId: 118, name: "raj patel", salary: 66000, department: "Sales", joiningDate: "2017-09-01" }
+  { empId: 118, name: "raj ghodasara", salary: 66000, department: "Sales", joiningDate: "2017-09-01" }
 
 ];
 
