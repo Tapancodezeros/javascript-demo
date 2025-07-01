@@ -17,14 +17,11 @@ const employees = [
   { empId: 116, name: "keyur bhuvaji", salary: 85000, department: "delevery manager", joiningDate: "2015-07-01" },
   { empId: 117, name: "kaushik patel", salary: 44000, department: "Sales", joiningDate: "2016-08-01" },
   { empId: 118, name: "raj ghodasara", salary: 66000, department: "Sales", joiningDate: "2017-09-01" }
-
 ];
-
 
 let currentEmployees = [...employees];
 let editingEmpId = null;
 
-// Calculates the experience in years and months from the joining date.
 function calculateExperience(joiningDate) {
   const join = new Date(joiningDate);
   const now = new Date();
@@ -37,7 +34,6 @@ function calculateExperience(joiningDate) {
   return `${years} year${years !== 1 ? 's' : ''} ${months} month${months !== 1 ? 's' : ''}`;
 }
 
-// Renders the employee table with given data
 function renderTable(data) {
   const tbody = document.getElementById("employeeTableBody");
   tbody.innerHTML = "";
@@ -74,19 +70,22 @@ function renderTable(data) {
   });
 }
 
-// Deletes an employee by ID
 function deleteEmployee(empId) {
-  currentEmployees = currentEmployees.filter(emp => emp.empId !== empId);
-  applyFilters();
+  const emp = currentEmployees.find(e => e.empId === empId);
+  if (confirm(`Are you sure you want to delete employee "${emp.name}" (ID: ${emp.empId})?`)) {
+    currentEmployees = currentEmployees.filter(emp => emp.empId !== empId);
+    applyFilters();
+  }
 }
 
-// Starts editing mode for selected employee
 function editEmployee(empId) {
-  editingEmpId = empId;
-  renderTable(currentEmployees);
+  const emp = currentEmployees.find(e => e.empId === empId);
+  if (confirm(`Do you want to edit employee "${emp.name}" (ID: ${emp.empId})?`)) {
+    editingEmpId = empId;
+    renderTable(currentEmployees);
+  }
 }
 
-// Saves the edited data
 function saveInlineEdit(empId) {
   const name = document.getElementById("editName").value.trim();
   const salary = parseFloat(document.getElementById("editSalary").value);
@@ -94,6 +93,11 @@ function saveInlineEdit(empId) {
     alert("Please enter valid name and salary.");
     return;
   }
+
+  if (!confirm(`Save changes to employee "${name}"?`)) {
+    return;
+  }
+
   const index = currentEmployees.findIndex(emp => emp.empId === empId);
   if (index !== -1) {
     currentEmployees[index].name = name;
@@ -103,17 +107,14 @@ function saveInlineEdit(empId) {
   applyFilters();
 }
 
-// Cancels editing
 function cancelInlineEdit() {
   editingEmpId = null;
   renderTable(currentEmployees);
 }
 
-// Applies search, sort, year and date range filters independently
 function applyFilters() {
   let filtered = [...currentEmployees];
 
-  // Search Filter
   const searchValue = document.getElementById("searchInput").value.toLowerCase();
   if (searchValue) {
     filtered = filtered.filter(emp =>
@@ -121,7 +122,6 @@ function applyFilters() {
     );
   }
 
-  // Year Filter
   const yearValue = document.getElementById("yearFilter").value;
   if (yearValue) {
     filtered = filtered.filter(emp =>
@@ -129,7 +129,6 @@ function applyFilters() {
     );
   }
 
-  // Date Range Filter
   const fromDate = document.getElementById("fromDate").value;
   const toDate = document.getElementById("toDate").value;
   if (fromDate && toDate) {
@@ -141,7 +140,6 @@ function applyFilters() {
     });
   }
 
-  // Sorting
   const sortValue = document.getElementById("sortSelect").value;
   if (sortValue === "asc") {
     filtered.sort((a, b) => a.salary - b.salary);
@@ -149,7 +147,6 @@ function applyFilters() {
     filtered.sort((a, b) => b.salary - a.salary);
   }
 
-  //  Count Display (optional)
   let countMessage = '';
   if (yearValue && fromDate && toDate) {
     countMessage = `Employees joined in ${yearValue} from ${fromDate} to ${toDate}: ${filtered.length}`;
@@ -165,7 +162,6 @@ function applyFilters() {
   renderTable(filtered);
 }
 
-// Auto-fill date range when year is selected
 document.getElementById("yearFilter").addEventListener("input", function () {
   const year = this.value;
   if (year && year >= 2010 && year <= 2100) {
@@ -175,11 +171,9 @@ document.getElementById("yearFilter").addEventListener("input", function () {
   applyFilters();
 });
 
-//  Event listeners for real-time filtering/sorting
 document.getElementById("searchInput").addEventListener("input", applyFilters);
 document.getElementById("sortSelect").addEventListener("change", applyFilters);
 document.getElementById("fromDate").addEventListener("change", applyFilters);
 document.getElementById("toDate").addEventListener("change", applyFilters);
 
-// Initial render
 renderTable(currentEmployees);
